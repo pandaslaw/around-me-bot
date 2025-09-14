@@ -23,6 +23,11 @@ class AppSettings(BaseSettings):
     TELEGRAM_BOT_TOKEN: str
 
     ADMIN_USER_IDS: List[int] = []
+    
+    # Optional API keys for enhanced POI search (all have free tiers)
+    FOURSQUARE_API_KEY: str = None
+    LOCATIONIQ_API_KEY: str = None
+    GEOAPIFY_API_KEY: str = None
 
     def load_prompts_from_yaml(self, yaml_file="prompts.yaml"):
         """Load prompts from the specified YAML file."""

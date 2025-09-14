@@ -46,9 +46,27 @@ class DailyRotatingFileHandler(logging.Handler):
 
 
 def setup_logging():
-    """Setup logging with daily rotating logs."""
+    """Setup logging with daily rotating logs and suppress noisy third-party logs."""
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger()
+
+    # Suppress noisy third-party library logs
+    # Set httpx (used by telegram bot) to WARNING level
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    
+    # Set urllib3 (used by requests) to WARNING level
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    
+    # Set telegram library logs to WARNING level
+    logging.getLogger("telegram").setLevel(logging.WARNING)
+    
+    # Set requests library to WARNING level
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    
+    # Set other common noisy loggers to WARNING
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("h11").setLevel(logging.WARNING)
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
 
     # Add a console handler
     console_handler = logging.StreamHandler()
@@ -64,5 +82,8 @@ def setup_logging():
     # Add a separate file handler for error logs
     error_handler = DailyRotatingFileHandler("error", level=logging.ERROR)
     logger.addHandler(error_handler)
+
+    # Log that logging has been configured
+    logger.info("Logging configured - third-party HTTP logs suppressed")
 
     return logger
